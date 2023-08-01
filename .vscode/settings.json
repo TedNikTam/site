@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./NL_project/telegram_bot/data_base"
+    ]
+}

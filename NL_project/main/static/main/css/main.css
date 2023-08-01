@@ -1,0 +1,66 @@
+body {
+    background: rgb(0, 0, 0);
+}
+
+aside {
+    position: fixed; /* фиксирует боковую панель */
+    float: left; /* положение */
+    background: black; /* фон */
+    width: 20%; /* ширина */
+    padding: 2.5%; /* внутренние отступы */
+    height: 100%; /* высота */
+    color: #fff; /* текст внутри блока */
+    border-right: 5px solid #4d4d4d; /* обводка по правой стороне */
+}
+
+aside img {
+    width: 100%;
+}
+
+aside ul {list-style: none}
+aside ul li {
+    font-size: 30px;
+    color: #adadad;
+    display: block;
+    margin-top: 10px;
+    transition: all .3s ease;
+}
+
+aside ul li:hover, aside ul a:hover {
+    color: #ce1e1e;
+    transform: scale(1.05);
+}
+
+main .features {
+    position: relative;
+    font-size: 25px;
+    float: left;
+    left: 30%; /*  */
+    color: #adadad;
+    margin-top: 100px;
+    text-align: center;
+    width: 60%; /* ширина текста */
+}
+
+main .features p {
+    max-width: 100%; /* заполняемость простарнства текстом */
+    margin: 20px auto;
+    text-align: justify; /* растяжка текста */
+}
+
+/* окошко с названием и анонсом статьи */
+.alert-warning {
+    float: left;
+    clear: both;
+    width: 100%;
+    margin: 5% 0; /* отступ окошка статьи от названия страницы */
+    text-align: justify; /* растяжка текста */
+    background: rgb(0, 0, 0);
+    color: #adadad;
+    border: 5px solid #4d4d4d; /* обводка */
+}
+
+/* расположение кнопки "Чиать полностью..." */
+.alert-warning a {
+    float: right;
+}
