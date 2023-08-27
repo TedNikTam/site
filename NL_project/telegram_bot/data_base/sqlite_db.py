@@ -29,12 +29,18 @@ async def sql_read_title(message):
 
 #текст статей
 @dp.callback_query_handler()
-async def callback_query_keyboard(callback_query: types.CallbackQuery):
-    for ret in cur.execute('SELECT id FROM news_articles').fetchone():
-        await bot.send_message(chat_id=callback_query.from_user.id, text=ret[0])
+# async def callback_query_keyboard(callback_query: types.CallbackQuery):
+#     for ret in cur.execute('SELECT id FROM news_articles').fetchall():
+#         await bot.send_message(chat_id=callback_query.from_user.id, text=ret[0])
 
-# async def sql_read_full_text(message):
-#     for ret in cur.execute('SELECT * FROM news_articles').fetchall():
-#         inkb = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(text='следующая', callback_data='www'))
-#         await bot.send_message(message.from_user.id, ret[2], reply_markup=inkb)
+async def sql_read_full_text(message):
+    for ret in cur.execute('SELECT * FROM news_articles').fetchall():
+        inkb = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(text='следующая', callback_data='qqqs'))
+        await bot.send_message(message.from_user.id, ret[2], reply_markup=inkb)
         
+async def sql_read2():
+    return cur.execute('SELECT * FROM news_articles').fetchall()
+
+async def sql_delete_command(data):
+    cur.execute('SELECT * FROM news_articles WHERE title == ?', (data))
+    base.commit()

@@ -4,6 +4,7 @@ from aiogram import Dispatcher, types
 from aiogram.dispatcher.filters import Text
 from create_bot import bot, dp
 from data_base import sqlite_db
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 class FSMAdmin(StatesGroup):
@@ -78,6 +79,23 @@ async def load_full_text(message: types.Message, state: FSMContext):
 #             data['date'] = message.text            
 #         await sqlite_db.sql_add_command(state)
 #         await state.finish()
+
+# удаление статьи
+@dp.callback_query_handler(lambda x: x.data and x.data.startwith('del '))
+async def del_callback_run(callback_query: types.CallbackQuery):
+    await sqlite_db.sql_delete_command(callback_query.data.replace('del ', ''))
+    await callback_query.answer(text=f'{callback_query.data.replace("del ", "")} удалена', show_alert=True)
+
+@dp.message_handler(commands='DLT')
+async def delete_item(message: types.Message):
+    if message.from_user.id == ID:
+        read = await sqlite_db.sql_read2()
+        for ret in read:
+            # await bot.send_message(message.from_user.id, f'{ret[1]}')
+            await bot.send_message(message.from_user.id, text='эту', reply_markup=InlineKeyboardMarkup().
+                                   add(InlineKeyboardButton(f'Удалить {ret[1]}', callback_data=f'del {ret[1]}')))
+
+
 
 #регистрация хендлеров
 def register_handlers_admin(dp: Dispatcher):
