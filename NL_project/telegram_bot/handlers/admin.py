@@ -5,6 +5,8 @@ from aiogram.dispatcher.filters import Text
 from create_bot import bot, dp
 from data_base import sqlite_db
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from keyboards.buttons import urlkb, kb_client_admin
+
 
 
 class FSMAdmin(StatesGroup):
@@ -20,12 +22,12 @@ ID = None
 async def make_changes_command(message: types.Message):
     global ID
     ID = message.from_user.id
-    await bot.send_message(message.from_user.id, 'Что хозяит надо?')
+    await bot.send_message(message.from_user.id, 'Что хозяит надо?', reply_markup=kb_client_admin)
     # await message.delete()
 
 
 #начало загрузки статьи
-# @dp.message_handler(commands='DWLD', state=None)
+# @dp.message_handler(commands='DWNLD', state=None)
 async def cm_start(message: types.Message):
     if message.from_user.id == ID:
         await FSMAdmin.title.set()
@@ -40,7 +42,7 @@ async def cancel_handler(message: types.Message, state: FSMContext):
         if current_state is None:
             return
         await state.finish()
-        await message.reply('OK')
+        await message.reply('Отмена создания статьи!')
 
 #вводим название статьи
 # @dp.message_handler(content_types=['text'], state=FSMAdmin.title)
@@ -81,25 +83,26 @@ async def load_full_text(message: types.Message, state: FSMContext):
 #         await state.finish()
 
 # удаление статьи
-@dp.callback_query_handler(lambda x: x.data and x.data.startwith('del '))
+@dp.callback_query_handler(lambda x: x.data and x.data.startswith('del '))
 async def del_callback_run(callback_query: types.CallbackQuery):
     await sqlite_db.sql_delete_command(callback_query.data.replace('del ', ''))
     await callback_query.answer(text=f'{callback_query.data.replace("del ", "")} удалена', show_alert=True)
 
-@dp.message_handler(commands='DLT')
+# @dp.message_handler(commands='DLT')
 async def delete_item(message: types.Message):
     if message.from_user.id == ID:
         read = await sqlite_db.sql_read2()
         for ret in read:
-            # await bot.send_message(message.from_user.id, f'{ret[1]}')
-            await bot.send_message(message.from_user.id, text='эту', reply_markup=InlineKeyboardMarkup().
-                                   add(InlineKeyboardButton(f'Удалить {ret[1]}', callback_data=f'del {ret[1]}')))
+            await bot.send_message(message.from_user.id, f'{ret[1]}')
+            await bot.send_message(message.from_user.id, text='^^^', reply_markup=InlineKeyboardMarkup().\
+                                   add(InlineKeyboardButton(f'Удалить', callback_data=f'del {ret[1]}')))
 
 
 
 #регистрация хендлеров
 def register_handlers_admin(dp: Dispatcher):
-    dp.register_message_handler(cm_start, commands=['DWLD'], state=None)
+    dp.register_message_handler(cm_start, commands=['DWNLD'], state=None)
+    dp.register_message_handler(delete_item, commands=['DLT'], state=None)
     dp.register_message_handler(cancel_handler, state='*', commands='отмена')
     dp.register_message_handler(cancel_handler, Text(equals='отмена', ignore_case=True), state="*")
     dp.register_message_handler(load_title, content_types=['text'], state=FSMAdmin.title)

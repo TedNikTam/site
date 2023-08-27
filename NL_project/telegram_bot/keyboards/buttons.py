@@ -1,28 +1,25 @@
 from aiogram import Bot, types
 from create_bot import dp, bot
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-import os
-
-from data_base import sqlite_db
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 
 
 
-inkb = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(text='читать', callback_data='www'))
+btn1 = KeyboardButton('/Articles')
+btn2 = KeyboardButton('/Weather')
+btn3 = KeyboardButton('/DWNLD')
+btn4 = KeyboardButton('/DLT')
+btn5 = KeyboardButton('/start')
 
-@dp.message_handler(commands='test')
-async def test_commands(message : types.Message):
-    await message.answer('СТАТЬИ ДЛЯ МУЖЧИН')
-    await sqlite_db.sql_read(message)
 
-# @dp.callback_query_handler(text='www')
-# async def www_call(callback: types.CallbackQuery):
-#     await callback.message.answer('нажата кнопка')
-#     await callback.answer()
-    
-@dp.callback_query_handler(text='www')
-async def www_call(message: types.CallbackQuery):
-    await sqlite_db.sql_read_full_text(message)
 
+kb_client = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+kb_client_admin = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+
+kb_client.row(btn1, btn2)
+kb_client_admin.row(btn3, btn4, btn5)
+
+
+# inkb = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(text='читать', callback_data='www'))
 
 # #Кнопки ссылки
 urlkb = InlineKeyboardMarkup(row_width=2)
